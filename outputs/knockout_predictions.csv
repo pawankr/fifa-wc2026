@@ -1,33 +1,33 @@
 match_id,predicted_home_team,predicted_away_team,predicted_home_goals,predicted_away_goals,corners,yellow_cards,red_cards,match_winner,penalties
-73,South Africa,Qatar,2,1,9,1,0,home,False
-74,Brazil,Netherlands,2,1,12,5,0,home,False
-75,Ecuador,South Korea,2,1,10,2,0,home,False
-76,Japan,Morocco,2,1,7,3,0,home,True
-77,Germany,France,1,2,9,7,0,away,False
-78,Norway,Haiti,2,3,7,1,0,away,False
-79,Mexico,Haiti,2,1,10,5,0,home,False
-80,Ghana,Curaçao,2,1,5,2,0,home,False
-81,Belgium,South Korea,2,1,10,2,0,home,True
-82,Australia,Canada,1,2,6,0,0,away,False
-83,Portugal,England,1,2,8,2,0,away,False
-84,Spain,Austria,2,1,9,4,0,home,False
-85,Switzerland,Curaçao,2,1,9,0,0,home,False
-86,Paraguay,Iran,2,1,10,2,0,home,True
-87,Algeria,Uruguay,1,2,14,9,0,away,False
-88,Colombia,Curaçao,2,1,6,0,0,home,False
-89,South Africa,Ecuador,1,2,8,4,0,away,False
-90,Brazil,France,1,2,13,4,1,away,False
-91,Japan,Haiti,2,1,8,5,0,home,False
-92,Mexico,Ghana,1,2,12,4,0,away,False
-93,England,Spain,1,2,10,2,0,away,False
-94,Belgium,Canada,2,1,5,7,0,home,True
-95,Paraguay,Colombia,1,2,14,4,0,away,True
-96,Switzerland,Uruguay,2,1,18,2,1,home,True
-97,Ecuador,France,1,2,13,8,1,away,False
-98,Spain,Belgium,2,1,12,10,0,home,False
-99,Japan,Ghana,2,1,10,4,0,home,False
-100,Colombia,Switzerland,2,1,14,4,0,home,False
-101,France,Spain,1,2,14,1,1,away,False
-102,Japan,Colombia,2,1,14,6,1,home,False
-103,France,Colombia,1,2,13,4,0,away,False
-104,Spain,Japan,2,1,16,4,0,home,False
+73,Czech Republic,Switzerland,2,1,9,5,0,home,False
+74,Brazil,Netherlands,2,1,5,4,0,home,False
+75,Ecuador,Tunisia,1,2,9,7,0,away,True
+76,Japan,Morocco,2,1,13,2,0,home,False
+77,Germany,France,2,1,16,6,0,home,False
+78,Norway,Saudi Arabia,1,2,9,4,0,away,False
+79,Mexico,Haiti,2,1,9,3,0,home,False
+80,Ghana,Jordan,2,1,9,2,0,home,False
+81,Belgium,South Africa,2,1,6,7,0,home,False
+82,Australia,Sweden,2,1,12,3,1,home,False
+83,Portugal,England,1,2,8,7,0,away,False
+84,Spain,Austria,2,1,9,3,0,home,False
+85,Qatar,Curaçao,1,2,10,5,0,away,True
+86,Paraguay,Iran,2,1,8,4,0,home,False
+87,Algeria,Uruguay,1,2,7,5,0,away,False
+88,Colombia,Panama,2,1,12,3,0,home,False
+89,Czech Republic,Tunisia,1,2,6,4,0,away,True
+90,Brazil,Germany,2,3,12,1,0,away,True
+91,Japan,Saudi Arabia,2,1,7,6,0,home,False
+92,Mexico,Ghana,1,2,11,4,0,away,False
+93,England,Spain,1,2,13,4,0,away,False
+94,Belgium,Australia,2,1,14,5,0,home,False
+95,Paraguay,Colombia,1,2,11,7,0,away,False
+96,Curaçao,Uruguay,2,1,8,2,0,home,False
+97,Tunisia,Germany,1,2,8,4,0,away,True
+98,Spain,Belgium,2,1,12,4,0,home,False
+99,Japan,Ghana,2,1,6,3,0,home,False
+100,Colombia,Curaçao,2,1,9,4,0,home,False
+101,Germany,Spain,1,2,17,10,0,away,False
+102,Japan,Colombia,2,1,8,0,1,home,False
+103,Germany,Colombia,2,1,10,0,0,home,False
+104,Spain,Japan,2,3,14,14,0,away,False
