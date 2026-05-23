@@ -61,19 +61,21 @@ def predict_knockout_match(home, away, poisson_model, xgb_model, features_fn):
             avg_h = avg_a + 1
     elif r < combined_hw + combined_d:
         penalties = True
-        if np.random.random() < 0.5:
-            result, avg_h = "home", avg_a + 1
-        else:
-            result, avg_a = "away", avg_h + 1
+        avg_h = max(avg_h, 1)
+        avg_a = avg_h
+        result = "home" if np.random.random() < 0.5 else "away"
     else:
         result = "away"
         if avg_a <= avg_h:
             avg_a = avg_h + 1
 
-    corners_h = int(np.random.poisson(5 + 0.3 * max(0, p_probs["home_exp"] - 1)))
-    corners_a = int(np.random.poisson(4 + 0.3 * max(0, p_probs["away_exp"] - 1)))
-    yellows = int(np.random.poisson(3.5))
-    reds = int(np.random.poisson(0.1))
+    att_h = poisson_model.attack.get(home, 1.0)
+    att_a = poisson_model.attack.get(away, 1.0)
+    avg_att = sum(poisson_model.attack.values()) / max(len(poisson_model.attack), 1)
+
+    corners = int(round(5 * att_h / avg_att + 4 * att_a / avg_att))
+    yellows = int(round(2.5 * att_h / avg_att + 2.0 * att_a / avg_att))
+    reds = int(np.random.poisson(0.12))
 
     return {
         "home_team": home,
@@ -82,7 +84,7 @@ def predict_knockout_match(home, away, poisson_model, xgb_model, features_fn):
         "away_goals": max(0, avg_a),
         "winner": home if result == "home" else away,
         "loser": away if result == "home" else home,
-        "corners": corners_h + corners_a,
+        "corners": corners,
         "yellow_cards": yellows,
         "red_cards": reds,
         "penalties": penalties,

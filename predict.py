@@ -164,7 +164,7 @@ def main():
 
     # ===== MONTE CARLO GROUP STAGE =====
     print(f"\n[6/6] Monte Carlo ({MC_ITERATIONS:,} iterations)...")
-    mc_group = {i: {"hg": [], "ag": [], "wt": [], "c": [], "yc": [], "rc": []}
+    mc_group = {i: {"hg": [], "ag": [], "wt": []}
                 for i in range(len(group_fixtures))}
 
     for it in range(MC_ITERATIONS):
@@ -172,7 +172,6 @@ def main():
             print(f"  {it}/{MC_ITERATIONS}")
         np.random.seed(it * 7 + 13)
         _, standings = run_group_stage(group_fixtures, poisson, xgb, features_fn)
-        # Record results for each match
         for idx in range(len(group_fixtures)):
             h, a = group_fixtures.at[idx, "home_team"], group_fixtures.at[idx, "away_team"]
             np.random.seed(it * 1000 + idx)
@@ -180,25 +179,31 @@ def main():
             mc_group[idx]["hg"].append(p["home_goals"])
             mc_group[idx]["ag"].append(p["away_goals"])
             mc_group[idx]["wt"].append(p["winning_team"])
-            mc_group[idx]["c"].append(p["corners"])
-            mc_group[idx]["yc"].append(p["yellow_cards"])
-            mc_group[idx]["rc"].append(p["red_cards"])
 
-    # ===== AGGREGATE GROUP =====
+    # ===== AGGREGATE GROUP (goals/results from MC, cards/corners from team stats) =====
     print("\n  Aggregating group results (mode)...")
     group_preds = group_fixtures.copy()
     for col in ["predicted_home_goals", "predicted_away_goals", "corners", "yellow_cards", "red_cards"]:
         group_preds[col] = 0
     group_preds["winning_team"] = ""
 
+    np.random.seed(42)
     for idx in range(len(group_fixtures)):
         r = mc_group[idx]
-        group_preds.at[idx, "predicted_home_goals"] = Counter(r["hg"]).most_common(1)[0][0]
-        group_preds.at[idx, "predicted_away_goals"] = Counter(r["ag"]).most_common(1)[0][0]
-        group_preds.at[idx, "corners"] = int(round(np.mean(r["c"])))
-        group_preds.at[idx, "yellow_cards"] = int(round(np.mean(r["yc"])))
-        group_preds.at[idx, "red_cards"] = int(round(np.mean(r["rc"])))
-        group_preds.at[idx, "winning_team"] = Counter(r["wt"]).most_common(1)[0][0]
+        hg_mode = Counter(r["hg"]).most_common(1)[0][0]
+        ag_mode = Counter(r["ag"]).most_common(1)[0][0]
+        group_preds.at[idx, "predicted_home_goals"] = hg_mode
+        group_preds.at[idx, "predicted_away_goals"] = ag_mode
+        group_preds.at[idx, "winning_team"] = "draw" if hg_mode == ag_mode else Counter(r["wt"]).most_common(1)[0][0]
+
+        home = group_fixtures.at[idx, "home_team"]
+        away = group_fixtures.at[idx, "away_team"]
+        att_h = poisson.attack.get(resolve_playoff_name(home), 1.0)
+        att_a = poisson.attack.get(resolve_playoff_name(away), 1.0)
+        avg_att = sum(poisson.attack.values()) / max(len(poisson.attack), 1)
+        group_preds.at[idx, "corners"] = int(round(5 * att_h / avg_att + 4 * att_a / avg_att))
+        group_preds.at[idx, "yellow_cards"] = int(round(2.5 * att_h / avg_att + 2.0 * att_a / avg_att))
+        group_preds.at[idx, "red_cards"] = 1 if np.random.random() < 0.10 * (att_h / avg_att + att_a / avg_att) / 2 else 0
 
     # Build consensus group standings
     print("\n  --- Consensus Group Standings ---")
@@ -254,8 +259,10 @@ def main():
             hg = int(round(m["home_goals"]))
             ag = int(round(m["away_goals"]))
             mw = m["match_winner"]
-            if mw == "home" and hg <= ag: hg = ag + 1
-            if mw == "away" and ag <= hg: ag = hg + 1
+            pen = m.get("penalties", False)
+            if not pen:
+                if mw == "home" and hg <= ag: hg = ag + 1
+                if mw == "away" and ag <= hg: ag = hg + 1
             print(f"  {m['match_id']:3d} {m['home_team']:18s} {hg}-{ag}  {m['away_team']:18s}{' (P)' if m.get('penalties') else ''}")
             ko_list.append({
                 "match_id": m["match_id"],

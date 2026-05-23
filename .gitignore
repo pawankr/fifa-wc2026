@@ -1,0 +1,4 @@
+*/__pycache__/*.pyc
+src/simulation/__pycache__/*.pyc
+src/simulation/__pycache__/knockout.cpython-314.pyc
+src/simulation/__pycache__/group_stage.cpython-314.pyc

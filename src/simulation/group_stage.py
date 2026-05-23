@@ -46,15 +46,20 @@ def predict_group_match(home, away, poisson_model, xgb_model, features_fn):
         if avg_a <= avg_h:
             avg_a = avg_h + 1
 
-    corners_h = int(np.random.poisson(5 + 0.3 * max(0, exp_h - 1)))
-    corners_a = int(np.random.poisson(4 + 0.3 * max(0, exp_a - 1)))
+    att_h = poisson_model.attack.get(home, 1.0)
+    att_a = poisson_model.attack.get(away, 1.0)
+    avg_att = sum(poisson_model.attack.values()) / max(len(poisson_model.attack), 1)
+
+    corners = int(round(5 * att_h / avg_att + 4 * att_a / avg_att))
+    yellows = int(round(2.5 * att_h / avg_att + 2.0 * att_a / avg_att))
+    reds = int(np.random.poisson(0.12))
 
     return {
         "home_goals": max(0, avg_h),
         "away_goals": max(0, avg_a),
-        "corners": corners_h + corners_a,
-        "yellow_cards": int(np.random.poisson(3.5)),
-        "red_cards": int(np.random.poisson(0.15)),
+        "corners": corners,
+        "yellow_cards": yellows,
+        "red_cards": reds,
         "winning_team": result,
     }
 
